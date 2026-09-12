@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teamwork Review</title>
+
+  <style>
+    :root{
+      --primary:#7d1838;
+      --primary2:#9a2449;
+      --ink:#191b20;
+      --muted:#777b84;
+      --line:#e5e6ea;
+      --soft:#f8edf1;
+      --bg:#f4f5f7;
+      --ok:#218739;
+      --warn:#b58105;
+      --danger:#c62828;
+      --white:#fff
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#fafafa 0,#f4f5f7 100%);
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      color:var(--ink)
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:auto;
+      padding:28px 16px 80px
+    }
+
+    .hero{
+      background:linear-gradient(135deg,var(--ink),#303139);
+      color:#fff;
+      border-radius:26px;
+      padding:26px;
+      box-shadow:0 16px 50px rgba(25,27,32,.15);
+      display:flex;
+      gap:18px;
+      align-items:center
+    }
+
+    .logo{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#d99bad,var(--primary));
+      display:grid;
+      place-items:center;
+      font-size:28px;
+      font-weight:800
+    }
+
+    .eyebrow{
+      font-size:11px;
+      letter-spacing:1.8px;
+      opacity:.7
+    }
+
+    .hero h1{
+      margin:6px 0 8px;
+      font-size:27px
+    }
+
+    .hero p{
+      margin:0;
+      color:#c9cad0;
+      line-height:1.8
+    }
+
+    .notice,.status{
+      margin-top:16px;
+      border:1px solid #ead3db;
+      background:#fff;
+      border-radius:18px;
+      padding:14px 16px
+    }
+
+    .notice strong{color:var(--primary)}
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      margin-top:18px;
+      box-shadow:0 10px 30px rgba(25,27,32,.05)
+    }
+
+    .section-head{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      margin-bottom:18px
+    }
+
+    .num{
+      background:var(--soft);
+      color:var(--primary);
+      font-weight:800;
+      border-radius:12px;
+      padding:8px 10px;
+      min-width:42px;
+      text-align:center
+    }
+
+    .section-head h2{
+      margin:0 0 6px;
+      font-size:19px
+    }
+
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:8px
+    }
+
+    select,textarea,input[type=text]{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:12px 13px;
+      font:inherit;
+      background:#fff;
+      outline:none
+    }
+
+    select:focus,textarea:focus{
+      border-color:#bd8294;
+      box-shadow:0 0 0 4px var(--soft)
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+      line-height:1.7
+    }
+
+    .question{
+      padding:16px 0;
+      border-top:1px dashed var(--line)
+    }
+
+    .question:first-of-type{border-top:0}
+
+    .qtext{
+      font-size:14px;
+      line-height:1.9;
+      margin-bottom:10px
+    }
+
+    .scale{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:8px
+    }
+
+    .score{position:relative}
+
+    .score input{
+      position:absolute;
+      opacity:0
+    }
+
+    .score label{
+      margin:0;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 6px;
+      text-align:center;
+      cursor:pointer;
+      font-weight:800;
+      transition:.18s;
+      background:#fafafa
+    }
+
+    .score small{
+      display:block;
+      font-size:10px;
+      color:var(--muted);
+      font-weight:400;
+      margin-top:3px
+    }
+
+    .score input:checked+label{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#fff;
+      transform:translateY(-1px);
+      box-shadow:0 6px 14px rgba(125,24,56,.22)
+    }
+
+    .score input:checked+label small{color:#f8edf1}
+
+    .status{display:none}
+    .status.show{display:block}
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px
+    }
+
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      background:#edf8f0;
+      color:var(--ok);
+      font-size:12px;
+      font-weight:700
+    }
+
+    .chip.todo{
+      background:#fff8df;
+      color:var(--warn)
+    }
+
+    .footer{
+      position:sticky;
+      bottom:12px;
+      margin-top:20px;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(10px);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      box-shadow:0 14px 40px rgba(25,27,32,.12)
+    }
+
+    .prog-head{
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      margin-bottom:8px
+    }
+
+    .bar{
+      height:8px;
+      background:#ededf0;
+      border-radius:20px;
+      overflow:hidden
+    }
+
+    .bar>div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--primary),#d99bad);
+      transition:.25s
+    }
+
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      background:var(--primary);
+      color:#fff;
+      padding:13px;
+      margin-top:12px;
+      font:inherit;
+      font-weight:800;
+      cursor:pointer
+    }
+
+    .btn:hover{background:var(--primary2)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .msg{
+      margin-top:10px;
+      font-size:13px;
+      text-align:center;
+      min-height:20px
+    }
+
+    .error{color:var(--danger)}
+    .success{color:var(--ok)}
+
+    .loading{
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,.82);
+      display:grid;
+      place-items:center;
+      z-index:20
+    }
+
+    .spinner{
+      width:42px;
+      height:42px;
+      border:4px solid #ead3db;
+      border-top-color:var(--primary);
+      border-radius:50%;
+      animation:spin .8s linear infinite
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:680px){
+      .wrap{padding:14px 10px 70px}
+      .hero{padding:20px;border-radius:20px}
+      .hero h1{font-size:22px}
+      .hero p{font-size:13px}
+      .grid{grid-template-columns:1fr}
+      .card{padding:16px;border-radius:18px}
+      .scale{gap:5px}
+      .score label{padding:9px 2px}
+      .score small{font-size:9px}
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="wrap">
+    <header class="hero">
+      <div class="logo">T</div>
+      <div>
+        <div class="eyebrow">SUPPORT TEAM • MONTHLY REVIEW</div>
+        <h1>Teamwork Review</h1>
+        <p>
+          Evaluate a teammate based on observable collaboration behaviors
+          from the current month.
+        </p>
+      </div>
+    </header>
+
+    <div class="notice">
+      <strong>Guideline:</strong>
+      Use observed behavior and concrete examples. A score of 1 means
+      “Needs Significant Improvement” and 5 means “Excellent”.
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <form id="form">
+      <section class="card">
+        <div class="section-head">
+          <div class="num">01</div>
+          <div>
+            <h2>Review Setup</h2>
+            <p>Select yourself and the teammate you are reviewing.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label>Evaluator</label>
+            <select id="evaluator" required></select>
+          </div>
+
+          <div>
+            <label>Team Member</label>
+            <select id="target" required disabled></select>
+          </div>
+        </div>
+
+        <input type="hidden" id="monthKey">
+      </section>
+
+      <div id="sections"></div>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="num">10</div>
+          <div>
+            <h2>Written Feedback</h2>
+            <p>Keep feedback specific, observable, respectful, and actionable.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label>What was this teammate's strongest teamwork behavior this month?</label>
+            <textarea
+              id="positive"
+              required
+              placeholder="Write a short, concrete example..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label>What is one practical way this teammate could improve their teamwork?</label>
+            <textarea
+              id="improvement"
+              required
+              placeholder="Write a respectful and behavior-focused suggestion..."
+            ></textarea>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <div class="prog-head">
+          <span>Form completion</span>
+          <strong id="progressText">0%</strong>
+        </div>
+
+        <div class="bar">
+          <div id="progressBar"></div>
+        </div>
+
+        <button id="submitBtn" class="btn" type="submit">
+          Submit Monthly Review
+        </button>
+
+        <div id="message" class="msg"></div>
+      </div>
+    </form>
+  </div>
+
+<script>
+let BOOT = null;
+
+const $ = id => document.getElementById(id);
+const scaleLabels = [
+  'Needs Major Improvement',
+  'Needs Improvement',
+  'Meets Expectations',
+  'Strong',
+  'Excellent'
+];
+
+google.script.run
+  .withSuccessHandler(init)
+  .withFailureHandler(showFatal)
+  .getBootstrapData();
+
+function init(data) {
+  BOOT = data;
+
+  $('monthKey').value = data.monthKey;
+
+  fillEvaluator();
+  renderSections();
+  bind();
+
+  $('loading').style.display = 'none';
+  updateProgress();
+}
+
+function fillEvaluator() {
+  $('evaluator').innerHTML =
+    '<option value="">Select evaluator</option>' +
+    BOOT.employees
+      .map(name => `<option>${esc(name)}</option>`)
+      .join('');
+
+  $('target').innerHTML =
+    '<option value="">Select evaluator first</option>';
+}
+
+function renderSections() {
+  $('sections').innerHTML = BOOT.sections.map((section, sectionIndex) => `
+    <section class="card">
+      <div class="section-head">
+        <div class="num">${String(sectionIndex + 2).padStart(2, '0')}</div>
+        <div>
+          <h2>${esc(section.title)}</h2>
+          <p>Weight in final score: ${Number(section.weight)}%</p>
+        </div>
+      </div>
+
+      ${section.questions.map((question, questionIndex) => `
+        <div class="question">
+          <div class="qtext">
+            ${questionIndex + 1}. ${esc(question.text)}
+          </div>
+
+          <div class="scale">
+            ${[1,2,3,4,5].map(value => `
+              <div class="score">
+                <input
+                  required
+                  type="radio"
+                  id="${question.key}_${value}"
+                  name="${question.key}"
+                  value="${value}"
+                >
+                <label for="${question.key}_${value}">
+                  ${value}
+                  <small>${scaleLabels[value - 1]}</small>
+                </label>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </section>
+  `).join('');
+}
+
+function bind() {
+  $('evaluator').addEventListener('change', loadStatus);
+  $('form').addEventListener('change', updateProgress);
+  $('form').addEventListener('input', updateProgress);
+  $('form').addEventListener('submit', submitForm);
+}
+
+function loadStatus() {
+  const evaluator = $('evaluator').value;
+
+  $('target').disabled = !evaluator;
+
+  if (!evaluator) {
+    $('status').classList.remove('show');
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(status => {
+      renderStatus(status);
+      fillTargets(status.remaining || []);
+    })
+    .withFailureHandler(showError)
+    .getEvaluatorStatus(evaluator, $('monthKey').value);
+}
+
+function fillTargets(remaining) {
+  $('target').innerHTML =
+    '<option value="">Select teammate</option>' +
+    remaining
+      .map(name => `<option>${esc(name)}</option>`)
+      .join('');
+
+  if (!remaining.length) {
+    $('target').innerHTML =
+      '<option value="">All reviews completed for this month</option>';
+
+    $('target').disabled = true;
+  }
+}
+
+function renderStatus(status) {
+  $('status').classList.add('show');
+
+  $('status').innerHTML = `
+    <strong>Your review status for ${esc($('monthKey').value)}</strong>
+
+    <div class="chips">
+      ${(status.completed || []).map(name =>
+        `<span class="chip">✓ ${esc(name)}</span>`
+      ).join('')}
+
+      ${(status.remaining || []).map(name =>
+        `<span class="chip todo">○ ${esc(name)}</span>`
+      ).join('')}
+    </div>
+  `;
+}
+
+function getAllQuestionKeys() {
+  return BOOT.sections.flatMap(section =>
+    section.questions.map(question => question.key)
+  );
+}
+
+function updateProgress() {
+  const keys = getAllQuestionKeys();
+
+  let done = 0;
+
+  if ($('evaluator').value) done++;
+  if ($('target').value) done++;
+
+  keys.forEach(key => {
+    if (document.querySelector(`input[name="${key}"]:checked`)) done++;
+  });
+
+  if ($('positive').value.trim().length >= 3) done++;
+  if ($('improvement').value.trim().length >= 3) done++;
+
+  const total = keys.length + 4;
+  const percentage = Math.round((done / total) * 100);
+
+  $('progressText').textContent = percentage + '%';
+  $('progressBar').style.width = percentage + '%';
+}
+
+function submitForm(event) {
+  event.preventDefault();
+
+  $('message').textContent = '';
+
+  const answers = {};
+
+  for (const key of getAllQuestionKeys()) {
+    const element =
+      document.querySelector(`input[name="${key}"]:checked`);
+
+    if (!element) {
+      return showError('Please answer every question.');
+    }
+
+    answers[key] = Number(element.value);
+  }
+
+  const payload = {
+    evaluator: $('evaluator').value,
+    target: $('target').value,
+    monthKey: $('monthKey').value,
+    answers,
+    positive: $('positive').value.trim(),
+    improvement: $('improvement').value.trim()
+  };
+
+  if (!payload.evaluator || !payload.target) {
+    return showError('Please select an evaluator and a teammate.');
+  }
+
+  setBusy(true);
+
+  google.script.run
+    .withSuccessHandler(result => {
+      setBusy(false);
+
+      $('message').className = 'msg success';
+      $('message').textContent = result.message;
+
+      $('positive').value = '';
+      $('improvement').value = '';
+
+      document
+        .querySelectorAll('input[type=radio]')
+        .forEach(input => input.checked = false);
+
+      renderStatus(result.status);
+      fillTargets(result.status.remaining || []);
+      updateProgress();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .withFailureHandler(error => {
+      setBusy(false);
+      showError(error);
+    })
+    .submitEvaluation(payload);
+}
+
+function setBusy(isBusy) {
+  $('submitBtn').disabled = isBusy;
+  $('submitBtn').textContent =
+    isBusy ? 'Submitting...' : 'Submit Monthly Review';
+}
+
+function showError(error) {
+  $('message').className = 'msg error';
+  $('message').textContent =
+    error && error.message ? error.message : String(error);
+}
+
+function showFatal(error) {
+  $('loading').style.display = 'none';
+
+  alert(
+    error && error.message ? error.message : String(error)
+  );
+}
+
+function esc(value) {
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+    character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[character])
+  );
+}
+</script>
+</body>
+</html>
